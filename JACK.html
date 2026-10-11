@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marks Calculator</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(-45deg, #0f172a, #172554, #312e81, #164e63);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 25px;
+    overflow-x: hidden;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 35px 30px;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    width: 370px;
+    max-width: 100%;
+    text-align: center;
+    animation: appear 0.6s ease-out;
+  }
+
+  @keyframes appear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 25px;
+  }
+
+  h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    margin: 10px auto 0;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #22d3ee, #818cf8);
+  }
+
+  input {
+    width: 100%;
+    padding: 13px 15px;
+    margin: 8px 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-size: 14px;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+
+  input::placeholder {
+    color: #cbd5e1;
+  }
+
+  input:focus {
+    border-color: #22d3ee;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+  }
+
+  button {
+    width: 48%;
+    padding: 12px 8px;
+    margin: 15px 1% 5px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #06b6d4, #4f46e5);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+  }
+
+  button:active {
+    transform: scale(0.97);
+  }
+
+  .clear-btn {
+    background: linear-gradient(135deg, #fb7185, #e11d48);
+  }
+
+  .result {
+    margin-top: 20px;
+    padding: 15px 12px;
+    border-radius: 12px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(52, 211, 153, 0.4);
+    color: #a7f3d0;
+    font-size: 20px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .result:empty {
+    display: none;
+  }
+
+  .footer {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    color: #cbd5e1;
+    font-size: 12px;
+  }
+
+  .developer {
+    margin-top: 8px;
+    color: #67e8f9;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 420px) {
+    body {
+      padding: 15px;
+    }
+
+    .container {
+      padding: 28px 20px;
+    }
+
+    h2 {
+      font-size: 24px;
+    }
+  }
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <h2>Marks Calculator</h2>
+
+    <input type="number" id="a1" placeholder="Enter AAT1 marks (max 10)">
+    <input type="number" id="a2" placeholder="Enter AAT2 marks (max 10)">
+    <input type="number" id="m1" placeholder="Enter Mid1 marks (max 30)">
+    <input type="number" id="m2" placeholder="Enter Mid2 marks (max 30)">
+    <input type="number" id="att" placeholder="Enter Attendance (%)">
+
+    <div>
+      <button onclick="calculate()">Calculate</button>
+      <button class="clear-btn" onclick="clearFields()">Clear</button>
+    </div>
+
+    <div id="result" class="result"></div>
+    <div class="developer">Developed by Jashvanth CSE (AIML)</div>
+</div>
+  </div>
+
+  <script>
+    function aat(a1, a2) {
+      let marks = (a1 + a2) / 2;
+      marks *= 1.5;
+      return Number(marks.toFixed(2));
+    }
+
+    function mid(m1, m2) {
+      let marks;
+      if (m1 > m2) {
+        marks = m1 * 0.75 + m2 * 0.25;
+      } else {
+        marks = m2 * 0.75 + m1 * 0.25;
+      }
+      marks *= (20/30);
+      return Number(marks.toFixed(2));
+    }
+
+    function atd(att) {
+      if (att >= 90) return 5;
+      else if (att >= 85) return 4;
+      else if (att >= 80) return 3;
+      else if (att >= 75) return 2;
+      else return 0;
+    }
+
+    function calculate() {
+      let a1 = Number(document.getElementById("a1").value);
+      let a2 = Number(document.getElementById("a2").value);
+      let m1 = Number(document.getElementById("m1").value);
+      let m2 = Number(document.getElementById("m2").value);
+      let att = Number(document.getElementById("att").value);
+
+      if (a1 > 10 || a2 > 10 || m1 > 30 || m2 > 30) {
+        alert("Invalid marks entered!");
+        return;
+      }
+
+      let total = aat(a1, a2) + mid(m1, m2) + atd(att);
+      document.getElementById("result").innerText = "Final Marks: " + Math.round(total);
+    }
+
+    function clearFields() {
+      document.querySelectorAll("input").forEach(input => input.value = "");
+      document.getElementById("result").innerText = "";
+      document.getElementById("a1").focus();
+    }
+
+    document.querySelectorAll("input").forEach((input, index, inputs) => {
+      input.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowDown" || event.key === "Enter") {
+          event.preventDefault();
+          if (index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          } else {
+            calculate();
+          }
+        }
+        else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          if (index > 0) {
+            inputs[index - 1].focus();
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
